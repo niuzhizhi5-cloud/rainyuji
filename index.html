@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="en" id="root" class="lang-zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rain项目合集 - 雨季制作</title>
+    <style>
+        /* ========== 原项目样式完全保留 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url(https://free.boltp.com/2026/02/28/69a2e2ddcbf3a.webp) no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            height: 100vh;
+        }
+
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            opacity: 0.7;
+            font-size: 12px;
+            animation: snowfall linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .adobe-cc {
+            width: 100vw;
+            height: 100vh;
+            background: rgba(20, 20, 30, 0.15);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1001;
+            transition: all 0.5s ease;
+        }
+
+        /* ===== 炫光主题变量 ===== */
+        body.theme-neon .adobe-cc {
+            background: rgba(10, 10, 20, 0.25);
+            backdrop-filter: blur(15px) saturate(200%);
+            -webkit-backdrop-filter: blur(15px) saturate(200%);
+        }
+        
+        body.theme-neon .top-nav {
+            background: rgba(20, 15, 35, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 2px 20px rgba(0, 255, 255, 0.1);
+        }
+        
+        body.theme-neon .left-sidebar {
+            background: rgba(20, 15, 35, 0.2);
+            border-right: 1px solid rgba(255, 0, 255, 0.2);
+        }
+        
+        body.theme-neon .sidebar-item:hover {
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+        
+        body.theme-neon .app-list-item, 
+        body.theme-neon .plan-app-card {
+            background: rgba(20, 15, 35, 0.25);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        
+        body.theme-neon .app-list-item:hover,
+        body.theme-neon .plan-app-card:hover {
+            border-color: rgba(255, 0, 255, 0.4);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+        }
+        
+        body.theme-neon .toggle-btn,
+        body.theme-neon .btn-install,
+        body.theme-neon .btn-buy,
+        body.theme-neon .btn-open {
+            background: rgba(0, 255, 255, 0.1) !important;
+            border: 1px solid rgba(0, 255, 255, 0.3) !important;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2) !important;
+        }
+        
+        body.theme-neon .toggle-btn:hover,
+        body.theme-neon .btn-install:hover,
+        body.theme-neon .btn-buy:hover,
+        body.theme-neon .btn-open:hover {
+            background: rgba(255, 0, 255, 0.15) !important;
+            border-color: rgba(255, 0, 255, 0.4) !important;
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4) !important;
+        }
+        
+        body.theme-neon .player-popup {
+            background: rgba(20, 15, 35, 0.35);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .top-nav {
+            background: rgba(15, 15, 25, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e6e6e6;
+            font-size: 12px;
+            flex-shrink: 0;
+            min-height: 48px;
+            transition: all 0.3s ease;
+            z-index: 1002;
+            position: relative;
+        }
+
+        .left-indicators {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .left-indicators span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0% { opacity: 0.9; text-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(102, 126, 234, 0.6); }
+            100% { opacity: 0.9; text-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+        }
+
+        .top-right-icons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            flex-wrap: nowrap;
+            height: 100%;
+            min-height: 32px;
+        }
+
+        /* ===== 主题切换按钮 ===== */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            margin-right: 4px;
+        }
+        
+        .theme-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theme-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .theme-btn:hover::before {
+            opacity: 1;
+            animation: rotate 3s linear infinite;
+        }
+        
+        .theme-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .theme-btn:active {
+            transform: scale(0.9);
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 液体玻璃按钮效果 ===== */
+        .toggle-btn, .btn-install, .btn-buy, .btn-open, .free-trial-btn, .btn-more,
+        .popup-control-btn, .popup-loop-btn, .popup-close {
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(12px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 2px rgba(255, 255, 255, 0.3),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.1) !important;
+            color: #fff;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1) !important;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 液体光泽效果 - 动态光晕 */
+        .toggle-btn::before, .btn-install::before, .btn-buy::before, .btn-open::before, 
+        .free-trial-btn::before, .btn-more::before, .popup-control-btn::before,
+        .popup-loop-btn::before, .popup-close::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        .toggle-btn:hover::before, .btn-install:hover::before, .btn-buy:hover::before, 
+        .btn-open:hover::before, .free-trial-btn:hover::before, .btn-more:hover::before,
+        .popup-control-btn:hover::before, .popup-loop-btn:hover::before, .popup-close:hover::before {
+            opacity: 1;
+            animation: liquidShine 2s infinite;
+        }
+
+        @keyframes liquidShine {
+            0% { transform: rotate(0deg) scale(1); opacity: 0.4; }
+            50% { transform: rotate(5deg) scale(1.1); opacity: 0.7; }
+            100% { transform: rotate(0deg) scale(1); opacity: 0.4; }
+        }
+
+        .toggle-btn:hover, .btn-install:hover, .btn-buy:hover, .btn-open:hover, 
+        .free-trial-btn:hover, .btn-more:hover, .popup-control-btn:hover,
+        .popup-loop-btn:hover, .popup-close:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.15),
+                0 0 15px rgba(102, 126, 234, 0.3) !important;
+            transform: translateY(-1px);
+        }
+
+        .toggle-btn:active, .btn-install:active, .btn-buy:active, .btn-open:active, 
+        .free-trial-btn:active, .btn-more:active, .popup-control-btn:active,
+        .popup-loop-btn:active, .popup-close:active {
+            transform: scale(0.95) translateY(1px);
+            background: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .toggle-btn.active {
+            background: rgba(102, 126, 234, 0.35) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.4),
+                inset 0 1px 3px rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .popup-control-btn.play-pause {
+            background: rgba(102, 126, 234, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.3),
+                inset 0 1px 3px rgba(255, 255, 255, 0.4) !important;
+        }
+
+        .popup-control-btn.play-pause:hover {
+            background: rgba(102, 126, 234, 0.45) !important;
+            box-shadow: 
+                0 6px 20px rgba(102, 126, 234, 0.5),
+                inset 0 1px 3px rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .popup-loop-btn.active {
+            background: rgba(102, 126, 234, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        /* 统一按钮基础样式（保留原结构但被上面覆盖） */
+        .toggle-btn, .btn-install, .btn-buy, .btn-open, .free-trial-btn, .btn-more {
+            color: #fff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 4px;
+        }
+
+        .toggle-btn {
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            flex: 1;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .adobe-cc.mobile-mode .main-grid {
+            grid-template-columns: 1fr !important;
+            height: calc(100vh - 48px);
+        }
+
+        .adobe-cc.mobile-mode .left-sidebar {
+            display: none !important;
+        }
+
+        .adobe-cc.mobile-mode .top-nav {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative;
+            z-index: 1002;
+        }
+
+        .left-sidebar {
+            background: rgba(32, 32, 34, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 20px 16px;
+            color: #ebebeb;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9d9da8;
+            margin-bottom: 12px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        /* ===== 侧边栏菜单悬停滑行动画 ===== */
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 8px;
+            color: #b0b0b8;
+            font-size: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .sidebar-item:hover::before {
+            left: 100%;
+        }
+        
+        .sidebar-item::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-item:hover::after {
+            width: 100%;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            padding-left: 15px;
+        }
+        
+        .sidebar-item:active {
+            transform: scale(0.98);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .right-panel {
+            padding: 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+            background: transparent;
+            scroll-behavior: smooth;
+            height: auto;
+            max-height: calc(100vh - 60px);
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tab-item {
+            color: #9a9aa0;
+            font-size: 13px;
+            font-weight: 500;
+            padding-bottom: 6px;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -7px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .tab-item::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: #6e9cff;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        .tab-item:hover::after {
+            width: 80%;
+        }
+
+        .tab-item.active {
+            color: #ffffff;
+            border-bottom: 2px solid #6e9cff;
+        }
+        
+        .tab-item.active::after {
+            display: none;
+        }
+
+        .stock-banner {
+            background: linear-gradient(135deg, #ff2e63, #ff9500, #ff2e63);
+            background-size: 200% 200%;
+            animation: gradientBanner 8s ease infinite;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(255, 46, 99, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stock-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 46, 99, 0.5);
+        }
+
+        @keyframes gradientBanner {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .stock-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 6s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .banner-text {
+            position: relative; z-index: 2;
+        }
+
+        .banner-text h2 {
+            background: linear-gradient(90deg, #00ffee, #7e5eff, #ff0080, #00ffee);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: neonFlow 4s linear infinite;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .banner-text p {
+            color: #fff;
+            opacity: 0.95;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .free-trial-btn {
+            font-weight: 700;
+            font-size: 15px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            max-width: 240px;
+            border: none;
+        }
+
+        .installed-title, .plan-title, .plan-app-name, .app-name {
+            background: linear-gradient(90deg, #00ffee, #7e5eff, #ff0080, #00ffee);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: neonFlow 4s linear infinite;
+            font-weight: 700;
+        }
+        @keyframes neonFlow {
+            0%{background-position: 0 0;}
+            100%{background-position: 300% 0;}
+        }
+
+        .installed-title {
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .plan-title {
+            font-size: 17px;
+            margin: 20px 0 12px;
+        }
+
+        .app-list-item, .plan-app-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(42, 42, 45, 0.25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            animation: cardUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        @keyframes cardUp {
+            to{transform: translateY(0); opacity:1;}
+        }
+        .app-list-item:nth-child(1){animation-delay:0.1s;}
+        .app-list-item:nth-child(2){animation-delay:0.2s;}
+        .plan-app-card:nth-child(1){animation-delay:0.3s;}
+        .plan-app-card:nth-child(2){animation-delay:0.4s;}
+
+        .app-list-item::before, .plan-app-card::before {
+            content:'';
+            position:absolute;
+            top:0; left:-100%;
+            width:100%; height:100%;
+            background: linear-gradient(90deg,transparent,rgba(120,80,255,0.1),transparent);
+            transition:left 0.5s ease;
+        }
+        .app-list-item:hover::before, .plan-app-card:hover::before {
+            left:100%;
+        }
+        .app-list-item:hover, .plan-app-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(120,80,255,0.3);
+            border-color: rgba(120,80,255,0.4);
+        }
+        
+        .app-list-item:hover .btn-install,
+        .app-list-item:hover .btn-buy,
+        .plan-app-card:hover .btn-open {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(102,126,234,0.5);
+        }
+
+        .app-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .app-icon-mini {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: white;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .app-icon-mini:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .app-icon-mini.rc { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .app-icon-mini.rp { background: linear-gradient(135deg, #ff6b6b, #f54ea2); }
+
+        .app-name {
+            font-size: 14px;
+        }
+
+        .app-status {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+            margin-top: 2px;
+            color: #bebec6;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.updated { background: #34c759; }
+        .status-dot.update-available { background: #007aff; }
+
+        .app-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-install, .btn-buy, .btn-open {
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            position:relative;
+            overflow:hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        }
+        .btn-install::after, .btn-buy::after, .btn-open::after {
+            content:'';
+            position:absolute;
+            top:0; left:-100%;
+            width:100%; height:100%;
+            background: linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+            animation: btnLight 2s infinite;
+        }
+        @keyframes btnLight {
+            100%{left:150%;}
+        }
+
+        .btn-install {
+            background: linear-gradient(135deg, rgba(102,126,234,0.6), rgba(118,75,162,0.6));
+        }
+        .btn-buy {
+            background: linear-gradient(135deg, rgba(255,46,99,0.6), rgba(255,149,0,0.6));
+        }
+
+        .btn-more {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 15px;
+            color: #9a9aa0;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-more:hover {
+            color: #fff;
+            transform: rotate(90deg) scale(1.1);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .plan-app-card {
+            display: block;
+        }
+
+        .plan-apps-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .plan-app-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-app-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .plan-app-icon.tool { background: linear-gradient(135deg, #4cc9f0, #4361ee); }
+        .plan-app-icon.shop { background: linear-gradient(135deg, #ff9f1c, #e76f51); }
+
+        .plan-app-name {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .plan-app-desc {
+            color: #9a9aa0;
+            font-size: 11px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .btn-open {
+            width: 100%;
+            padding: 6px 0;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        /* ========== 新悬浮播放器样式 - 磨砂玻璃风格 ========== */
+        /* 顶部悬浮光盘 - 移到PC按钮左边 - iOS适配优化 */
+        .top-floating-disc {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 4px;
+            cursor: pointer;
+            z-index: 2000;
+            height: 32px;
+            width: 32px;
+            transform: translateY(0);
+            -webkit-transform: translateY(0);
+        }
+        
+        .top-disc-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a2a37, #1a1a25);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            animation: discRotate 8s linear infinite;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            flex-shrink: 0;
+        }
+        .top-disc-icon:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+            transform: scale(1.1) rotate(180deg);
+        }
+        
+        /* 弹出窗口 - 磨砂玻璃风格，缩小尺寸 */
+        .player-popup {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            width: 300px;
+            background: rgba(25, 25, 35, 0.3);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            z-index: 1999;
+            display: none;
+            color: white;
+            transition: all 0.3s ease;
+            animation: popIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .player-popup.show {
+            display: block;
+        }
+        
+        /* 唱片封面 - 缩小 */
+        .album-cover {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            animation: discRotate 8s linear infinite;
+            animation-play-state: running;
+            transition: all 0.3s ease;
+        }
+        
+        .album-cover:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        .album-cover.paused {
+            animation-play-state: paused;
+        }
+        
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* 歌曲信息 */
+        .popup-song-info {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .popup-song-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            background: linear-gradient(90deg, #00ffee, #7e5eff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-song-title:hover {
+            letter-spacing: 1px;
+        }
+        
+        .popup-artist {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* 进度条 */
+        .popup-progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            cursor: pointer;
+            margin: 12px 0 5px;
+            overflow: hidden;
+            transition: height 0.2s ease;
+        }
+        
+        .popup-progress-container:hover {
+            height: 6px;
+        }
+        
+        .popup-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+        
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 12px;
+        }
+        
+        /* 控制按钮组 - 缩小 */
+        .popup-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .popup-control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .popup-control-btn:hover {
+            transform: scale(1.15);
+        }
+        
+        .popup-control-btn.play-pause {
+            width: 48px;
+            height: 48px;
+            background: rgba(102, 126, 234, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 20px;
+        }
+        
+        /* 底部控制栏 */
+        .popup-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .popup-volume {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .popup-volume span {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s ease;
+        }
+        
+        .popup-volume span:hover {
+            transform: scale(1.2);
+            color: white;
+        }
+        
+        .popup-volume-slider {
+            width: 70px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            outline: none;
+            transition: height 0.2s ease;
+        }
+        
+        .popup-volume-slider:hover {
+            height: 6px;
+        }
+        
+        .popup-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .popup-volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 10px white;
+        }
+        
+        .popup-loop-btn {
+            padding: 4px 10px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.9);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .popup-loop-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .popup-loop-btn.active {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 关闭按钮 */
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .popup-close:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: rgba(255,0,0,0.2);
+            color: white;
+        }
+
+        /* 隐藏原来的悬浮球 */
+        .floating-disc {
+            display: none;
+        }
+
+        @keyframes discRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        [data-lang] { display: none !important; }
+        #root.lang-en [data-lang="en"] { display: inline !important; }
+        #root.lang-zh [data-lang="zh"] { display: inline !important; }
+        [data-lang="en-block"], [data-lang="zh-block"] { display: none !important; }
+        #root.lang-en [data-lang="en-block"] { display: block !important; }
+        #root.lang-zh [data-lang="zh-block"] { display: block !important; }
+
+        /* VIP按钮样式 - 竖排 */
+.vip-activate-btn {
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    color: #ffd700;
+    padding: 4px 6px;        /* 调整内边距 */
+    border-radius: 8px;       /* 稍微调小圆角 */
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;   /* 改为竖排 */
+    align-items: center;
+    justify-content: center;
+    gap: 2px;                 /* 星星和文字间距 */
+    margin-left: 4px;
+    min-width: 32px;          /* 设置最小宽度 */
+    line-height: 1.2;         /* 调整行高 */
+}
+
+.vip-activate-btn .vip-star {
+    font-size: 14px;          /* 星星稍微大一点 */
+}
+
+.vip-activate-btn .vip-text {
+    font-size: 9px;           /* 文字稍微小一点 */
+    letter-spacing: 0.5px;     /* 文字间距 */
+}
+
+.vip-activate-btn:hover {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.6);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+/* 手机版适配 */
+@media (max-width: 768px) {
+    .vip-activate-btn {
+        padding: 3px 4px;
+        min-width: 28px;
+    }
+    .vip-activate-btn .vip-star {
+        font-size: 12px;
+    }
+    .vip-activate-btn .vip-text {
+        font-size: 8px;
+    }
+}
+
+        /* VIP标识样式 */
+        .vip-badge {
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .vip-badge.gray {
+            background: rgba(128, 128, 128, 0.3);
+            color: #aaa;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+        }
+
+        .vip-badge.vip {
+            background: linear-gradient(135deg, #ff2e63, #ff9500);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            animation: vipGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes vipGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 46, 99, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(255, 149, 0, 0.5); }
+        }
+
+        /* 欢迎提示 */
+        .welcome-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(25, 25, 35, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 30px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 14px;
+            z-index: 3000;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        .welcome-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .welcome-toast .username {
+            background: linear-gradient(135deg, #ff2e63, #ff9500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            margin: 0 4px;
+        }
+
+        /* ===== 苹果平板修复 ===== */
+        @media (max-width: 1024px) {
+            .right-panel {
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                max-height: calc(100vh - 60px);
+            }
+            
+            .adobe-cc.mobile-mode .right-panel {
+                height: calc(100vh - 48px);
+                overflow-y: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="snow" id="snow"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="adobe-cc" id="app-container">
+        <div class="top-nav">
+            <div class="left-indicators">
+                <span>Rain-雨季</span>
+            </div>
+            <div class="top-right-icons">
+                <!-- 主题切换按钮 -->
+                <div class="theme-toggle">
+                    <button class="theme-btn" id="themeToggle" title="切换主题">✨</button>
+                </div>
+                <!-- 光盘放在PC按钮左边 -->
+                <div class="top-floating-disc" id="topFloatingDisc">
+                    <div class="top-disc-icon" id="topDiscIcon">💿</div>
+                </div>
+                <div class="toggle-group">
+                    <button class="toggle-btn active click-sound" id="view-desktop">PC</button>
+                    <button class="toggle-btn click-sound" id="view-mobile">手机</button>
+                </div>
+                <!-- VIP激活按钮 - 竖排 -->
+<button class="vip-activate-btn" id="vipActivateBtn">
+    <span class="vip-star">⭐</span>
+    <span class="vip-text">VIP</span>
+</button>
+                <div class="toggle-group">
+                    <button class="toggle-btn click-sound" id="lang-en">EN</button>
+                    <button class="toggle-btn active click-sound" id="lang-zh">中文</button>
+                </div>
+                <!-- 登录/注册按钮 - 小人图标版 -->
+                <div class="user-status" id="userStatus">
+                    <span class="user-guest" id="guestDisplay">
+                        <button class="user-btn" id="openAuthBtn">👤</button>
+                    </span>
+                    <span class="user-loggedin" id="userDisplay" style="display: none;">
+                        <span class="user-name" id="userName"></span>
+                        <span class="vip-badge gray" id="vipBadge">VIP</span>
+                        <button class="user-btn" id="logoutBtn">退出</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="left-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">分类</div>
+                    <div class="sidebar-item click-sound" onclick="goToVip()">
+                        <span class="icon">⭐</span>
+                        <span>VIP服务</span>
+                    </div>
+                    <div class="sidebar-item click-sound" onclick="goToClient()">
+                        <span class="icon">📱</span>
+                        <span>客户端板块</span>
+                    </div>
+                    <div class="sidebar-item click-sound" onclick="goToProject()">
+                        <span class="icon">📂</span>
+                        <span>Rain旗下其他项目</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel" id="rightPanel">
+                <div class="category-tabs">
+                    <span class="tab-item active click-sound">主页</span>
+                </div>
+
+                <div id="vipSection" class="stock-banner">
+                    <div class="banner-text">
+                        <h2>Rain-VIP服务</h2>
+                        <p data-lang="zh-block">
+                            购买VIP可享：<br>
+                            购买客户端8.8折，定制客户端9折<br>
+                            售后群VIP头衔，提前知晓更新内容<br>
+                            VIP专属聊天群<br>
+                            价格：6.6元/月，16.6元/季，36.6元/年
+                        </p>
+                    </div>
+                    <a href="https://shop.xiaoman.top/links/1D40BE1C" class="free-trial-btn click-sound" target="_blank">点击成为VIP</a>
+                </div>
+
+                <div id="clientSection" class="installed-title">客户端板块</div>
+
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <div class="app-icon-mini rc">RC</div>
+                        <div>
+                            <div class="app-name">Rain ClientV2</div>
+                            <div class="app-status">
+                                <span><span class="status-dot updated"></span>已更新V2 | 2026年2月26日</span>
+                                <span>更新内容:1.修复ui | 2.头顶称号rain | 3.粒子 | 4.新增ios渠道 | 5.修复附魔金苹果附魔效果</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-install click-sound" onclick="checkPassword1()">安装</button>
+                        <a href="https://shop.xiaoman.top/links/1D40BE1C" target="_blank"><button class="btn-buy click-sound">购买</button></a>
+                        <span class="btn-more click-sound">⋯</span>
+                    </div>
+                </div>
+
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <div class="app-icon-mini rp">RP</div>
+                        <div>
+                            <div class="app-name">Rain Pro Client-V7</div>
+                            <div class="app-status">
+                                <span><span class="status-dot updated"></span>已更新V7 | 2026年2月21日</span>
+                                <span>更新内容:1.修复动作优化 | 2.修复个别音效 | 3.修复贴图错误 | 4.添加反隐身2d碰撞箱 | 5.可开关光影＆矿透＆实体透视 | 6.摄像机穿墙</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-install click-sound" onclick="checkPassword2()">安装</button>
+                        <a href="https://shop.xiaoman.top/links/1D40BE1C" target="_blank"><button class="btn-buy click-sound">购买</button></a>
+                        <span class="btn-more click-sound">⋯</span>
+                    </div>
+                </div>
+
+                <div id="projectSection" class="plan-title">Rain旗下其他项目</div>
+                <div class="plan-apps-grid">
+                    <div class="plan-app-card">
+                        <div class="plan-app-icon tool">工</div>
+                        <div class="plan-app-name">RainStudio整合工具箱</div>
+                        <p class="plan-app-desc">专业的我的世界整合工具</p>
+                        <button class="btn-open click-sound" onclick="window.open('https://gq2ku54y.html2web.com/', '_blank')">打开</button>
+                    </div>
+                    <div class="plan-app-card">
+                        <div class="plan-app-icon shop">店</div>
+                        <div class="plan-app-name">Rain官方小店</div>
+                        <p class="plan-app-desc">全网最便宜最优质最好看的客户端，全网最全渠道永不跑路，还有科技（也有ios），库存最全的小号</p>
+                        <button class="btn-open click-sound" onclick="window.open('https://shop.xiaoman.top/links/1D40BE1C', '_blank')">打开</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹出播放器窗口 - 磨砂玻璃风格 -->
+    <div class="player-popup" id="playerPopup">
+        <div class="popup-close" id="popupClose">✕</div>
+        
+        <!-- 旋转封面图 -->
+        <div class="album-cover" id="albumCover">
+            <img id="coverImage" src="https://free.boltp.com/2026/02/28/69a2d2f82f20c.webp" alt="album cover">
+        </div>
+        
+        <div class="popup-song-info">
+            <div class="popup-song-title" id="popupSongTitle">下雨天</div>
+            <div class="popup-artist" id="popupArtist">Rain Music</div>
+        </div>
+        
+        <!-- 进度条 -->
+        <div class="popup-progress-container" id="popupProgressContainer">
+            <div class="popup-progress-bar" id="popupProgressBar"></div>
+        </div>
+        <div class="time-info">
+            <span id="currentTimeDisplay">0:00</span>
+            <span id="durationDisplay">0:00</span>
+        </div>
+        
+        <!-- 主控制按钮 -->
+        <div class="popup-controls">
+            <button class="popup-control-btn" id="popupPrevBtn">⏮️</button>
+            <button class="popup-control-btn play-pause" id="popupPlayPauseBtn">⏸️</button>
+            <button class="popup-control-btn" id="popupNextBtn">⏭️</button>
+        </div>
+        
+        <!-- 底部控制栏 -->
+        <div class="popup-footer">
+            <div class="popup-volume">
+                <span>🔊</span>
+                <input type="range" class="popup-volume-slider" id="popupVolumeSlider" min="0" max="100" value="80">
+            </div>
+            <button class="popup-loop-btn" id="popupLoopBtn">🔁 列表循环</button>
+        </div>
+    </div>
+
+    <!-- VIP激活弹窗 -->
+    <div class="auth-popup" id="vipPopup" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="auth-tabs">
+                    <span class="auth-tab active">激活VIP</span>
+                </div>
+                <span class="auth-close" id="closeVipPopup">✕</span>
+            </div>
+            
+            <div class="auth-form active">
+                <div class="form-group">
+                    <label>激活码</label>
+                    <input type="text" id="vipCode" placeholder="请输入激活码" required>
+                    <small style="color: rgba(255,255,255,0.5); display: block; margin-top: 5px;">月卡: 月-6.6RMB</small>
+                    <small style="color: rgba(255,255,255,0.5); display: block;">季卡: 季-16.6RMB</small>
+                    <small style="color: rgba(255,255,255,0.5); display: block;">年卡: 年-36.6RMB</small>
+                </div>
+                <div class="form-group">
+                    <button class="auth-btn" id="activateVipBtn">激活VIP</button>
+                </div>
+                <div class="auth-message" id="vipMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 欢迎提示 -->
+    <div class="welcome-toast" id="welcomeToast">
+        <span>欢迎尊贵的VIP用户 </span>
+        <span class="username" id="welcomeUsername"></span>
+    </div>
+
+    <!-- 登录/注册弹窗 -->
+    <div class="auth-popup" id="authPopup" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="showLoginBtn">登录</button>
+                    <button class="auth-tab" id="showRegisterBtn">注册</button>
+                </div>
+                <span class="auth-close" id="closeAuth">✕</span>
+            </div>
+            
+            <!-- 登录表单 -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="loginUsername" placeholder="输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPassword" placeholder="输入密码" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="auth-btn">登 录</button>
+                </div>
+                <div class="auth-message" id="loginMessage"></div>
+            </form>
+            
+            <!-- 注册表单 -->
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="registerUsername" placeholder="至少3个字符" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="registerPassword" placeholder="至少6个字符" required>
+                </div>
+                <div class="form-group">
+                    <label>确认密码</label>
+                    <input type="password" id="registerConfirmPwd" placeholder="再次输入密码" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱（选填）</label>
+                    <input type="email" id="registerEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="auth-btn">注 册</button>
+                </div>
+                <div class="auth-message" id="registerMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+    /* 登录弹窗样式 - 磨砂玻璃风格，匹配你的主题 */
+    .auth-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-container {
+        width: 320px;
+        background: rgba(25, 25, 35, 0.3);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        animation: popIn 0.3s ease;
+    }
+
+    .auth-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .auth-tabs {
+        display: flex;
+        gap: 10px;
+    }
+
+    .auth-tab {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 8px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .auth-tab.active {
+        background: rgba(102, 126, 234, 0.3);
+        color: white;
+        border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .auth-close {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .auth-form {
+        display: none;
+    }
+
+    .auth-form.active {
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 5px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .auth-btn {
+        width: 100%;
+        padding: 12px;
+        background: rgba(102, 126, 234, 0.3);
+        border: 1px solid rgba(102, 126, 234, 0.4);
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .auth-btn:hover {
+        background: rgba(102, 126, 234, 0.5);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .auth-message {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #ff6b6b;
+        text-align: center;
+    }
+
+    /* 用户状态栏 - 小人图标样式 */
+    .user-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 28px;        /* 从36px改到28px */
+    height: 28px;       /* 从36px改到28px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    margin: 0 3px;      /* 从5px改到3px */
+    font-size: 14px;    /* 从18px改到14px */
+    color: white;
+}
+
+    .user-btn:hover {
+        background: rgba(102, 126, 234, 0.4);
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+    }
+
+    .user-name {
+        margin-right: 4px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .user-loggedin {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .user-loggedin .user-btn {
+    width: 24px;        /* 从32px改到24px */
+    height: 24px;       /* 从32px改到24px */
+    background: rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.6);
+    cursor: default;
+    font-size: 12px;    /* 从16px改到12px */
+    margin-left: 0;
+}
+
+    .user-loggedin .user-btn:hover {
+        transform: none;
+        box-shadow: none;
+        background: rgba(102, 126, 234, 0.3);
+    }
+
+    .user-loggedin #logoutBtn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 16px;
+        font-size: 12px;
+        cursor: pointer;
+        width: auto;
+        height: auto;
+        border-radius: 16px;
+        margin-left: 4px;
+    }
+
+    .user-loggedin #logoutBtn:hover {
+        background: rgba(255, 70, 70, 0.3);
+        border-color: rgba(255, 70, 70, 0.5);
+        transform: scale(1.05);
+    }
+    </style>
+
+    <script>
+    // ========== 用户认证前端逻辑 ==========
+// 判断当前环境，自动选择正确的API地址
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'      // 本地访问用 localhost:3000
+    : 'https://rainyuji.vercel.app';      // 隧道访问用 bore.pub:41477
+
+    // DOM 元素
+    const authPopup = document.getElementById('authPopup');
+    const openAuthBtn = document.getElementById('openAuthBtn');
+    const closeAuth = document.getElementById('closeAuth');
+    const showLoginBtn = document.getElementById('showLoginBtn');
+    const showRegisterBtn = document.getElementById('showRegisterBtn');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const registerMessage = document.getElementById('registerMessage');
+    const guestDisplay = document.getElementById('guestDisplay');
+    const userDisplay = document.getElementById('userDisplay');
+    const userName = document.getElementById('userName');
+    const userVip = document.getElementById('userVip');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    // VIP相关元素
+    const vipActivateBtn = document.getElementById('vipActivateBtn');
+    const vipPopup = document.getElementById('vipPopup');
+    const closeVipPopup = document.getElementById('closeVipPopup');
+    const vipCode = document.getElementById('vipCode');
+    const activateVipBtn = document.getElementById('activateVipBtn');
+    const vipMessage = document.getElementById('vipMessage');
+    const vipBadge = document.getElementById('vipBadge');
+    const welcomeToast = document.getElementById('welcomeToast');
+    const welcomeUsername = document.getElementById('welcomeUsername');
+
+    // 激活码映射
+    const VIP_CODES = {
+        '月-52f2885bc2': 'month',
+        '季-265d4d300b': 'season',
+        '年-d4de26cf64': 'year'
+    };
+
+    // VIP等级对应的颜色和名称
+    const VIP_NAMES = {
+        'month': '月卡VIP',
+        'season': '季卡VIP',
+        'year': '年卡VIP'
+    };
+
+    // 检查VIP状态
+    function checkVipStatus() {
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        
+        if (token && userStr) {
+            const user = JSON.parse(userStr);
+            const vipInfo = JSON.parse(localStorage.getItem('vipInfo') || '{"level":0,"type":null}');
+            
+            if (vipInfo.level > 0) {
+                vipBadge.className = 'vip-badge vip';
+                vipBadge.textContent = VIP_NAMES[vipInfo.type] || 'VIP';
+            } else {
+                vipBadge.className = 'vip-badge gray';
+                vipBadge.textContent = 'VIP';
+            }
+            
+            // 检查是否需要显示欢迎语
+            const showWelcome = sessionStorage.getItem('showVipWelcome');
+            if (vipInfo.level > 0 && showWelcome === 'true') {
+                showVipWelcome(user.username);
+                sessionStorage.removeItem('showVipWelcome');
+            }
+        }
+    }
+
+    // 显示VIP欢迎语
+    function showVipWelcome(username) {
+        welcomeUsername.textContent = username;
+        welcomeToast.classList.add('show');
+        setTimeout(() => {
+            welcomeToast.classList.remove('show');
+        }, 3000);
+    }
+
+    // 修改显示用户信息函数
+    function showUserInfo(user) {
+        guestDisplay.style.display = 'none';
+        userDisplay.style.display = 'flex';
+        userName.textContent = user.username;
+        checkVipStatus();
+    }
+
+    // 显示访客状态
+    function showGuest() {
+        guestDisplay.style.display = 'inline';
+        userDisplay.style.display = 'none';
+        // 重置VIP标识
+        if (vipBadge) {
+            vipBadge.className = 'vip-badge gray';
+            vipBadge.textContent = 'VIP';
+        }
+    }
+
+    // 打开VIP激活弹窗
+    vipActivateBtn.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('请先登录');
+            authPopup.style.display = 'flex';
+            return;
+        }
+        vipPopup.style.display = 'flex';
+        vipCode.value = '';
+        vipMessage.textContent = '';
+    });
+
+    // 关闭VIP激活弹窗
+    closeVipPopup.addEventListener('click', () => {
+        vipPopup.style.display = 'none';
+    });
+
+    // 激活VIP
+    activateVipBtn.addEventListener('click', () => {
+        const code = vipCode.value.trim();
+        
+        if (!code) {
+            vipMessage.textContent = '请输入激活码';
+            return;
+        }
+
+        const vipType = VIP_CODES[code];
+        if (!vipType) {
+            vipMessage.textContent = '激活码无效';
+            return;
+        }
+
+        // 保存VIP信息
+        const vipInfo = {
+            level: vipType === 'month' ? 1 : (vipType === 'season' ? 2 : 3),
+            type: vipType,
+            activatedAt: new Date().toISOString()
+        };
+        localStorage.setItem('vipInfo', JSON.stringify(vipInfo));
+        
+        // 标记需要显示欢迎语
+        sessionStorage.setItem('showVipWelcome', 'true');
+        
+        vipMessage.style.color = '#34c759';
+        vipMessage.textContent = 'VIP激活成功！';
+        
+        // 更新VIP标识
+        checkVipStatus();
+        
+        // 关闭弹窗
+        setTimeout(() => {
+            vipPopup.style.display = 'none';
+        }, 1500);
+    });
+
+    // 点击弹窗外关闭
+    vipPopup.addEventListener('click', (e) => {
+        if (e.target === vipPopup) {
+            vipPopup.style.display = 'none';
+        }
+    });
+
+    // 打开弹窗
+    openAuthBtn.addEventListener('click', () => {
+        authPopup.style.display = 'flex';
+        showLoginForm(); // 默认显示登录
+    });
+
+    // 关闭弹窗
+    closeAuth.addEventListener('click', () => {
+        authPopup.style.display = 'none';
+    });
+
+    // 切换登录表单
+    function showLoginForm() {
+        showLoginBtn.classList.add('active');
+        showRegisterBtn.classList.remove('active');
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        loginMessage.textContent = '';
+        registerMessage.textContent = '';
+    }
+
+    // 切换注册表单
+    function showRegisterForm() {
+        showRegisterBtn.classList.add('active');
+        showLoginBtn.classList.remove('active');
+        registerForm.classList.add('active');
+        loginForm.classList.remove('active');
+        loginMessage.textContent = '';
+        registerMessage.textContent = '';
+    }
+
+    showLoginBtn.addEventListener('click', showLoginForm);
+    showRegisterBtn.addEventListener('click', showRegisterForm);
+
+    // ========== 登录 ==========
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        loginMessage.textContent = '登录中...';
+        
+        try {
+            const res = await fetch(`${API_URL}/api/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                // 保存 token 和用户信息
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                loginMessage.style.color = '#34c759';
+                loginMessage.textContent = '登录成功！';
+                
+                // 关闭弹窗
+                setTimeout(() => {
+                    authPopup.style.display = 'none';
+                    showUserInfo(data.user);
+                }, 1000);
+            } else {
+                loginMessage.style.color = '#ff6b6b';
+                loginMessage.textContent = data.message;
+            }
+        } catch (err) {
+            loginMessage.style.color = '#ff6b6b';
+            loginMessage.textContent = '连接服务器失败';
+            console.error(err);
+        }
+    });
+
+    // ========== 注册 ==========
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPwd = document.getElementById('registerConfirmPwd').value;
+        const email = document.getElementById('registerEmail').value;
+        
+        // 前端验证
+        if (password !== confirmPwd) {
+            registerMessage.style.color = '#ff6b6b';
+            registerMessage.textContent = '两次密码不一致';
+            return;
+        }
+        
+        registerMessage.textContent = '注册中...';
+        
+        try {
+            const res = await fetch(`${API_URL}/api/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, email })
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                // 自动登录
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                registerMessage.style.color = '#34c759';
+                registerMessage.textContent = '注册成功！';
+                
+                setTimeout(() => {
+                    authPopup.style.display = 'none';
+                    showUserInfo(data.user);
+                }, 1000);
+            } else {
+                registerMessage.style.color = '#ff6b6b';
+                registerMessage.textContent = data.message;
+            }
+        } catch (err) {
+            registerMessage.style.color = '#ff6b6b';
+            registerMessage.textContent = '连接服务器失败';
+            console.error(err);
+        }
+    });
+
+    // ========== 退出登录 ==========
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('vipInfo');
+        showGuest();
+    });
+
+    // ========== 在下载按钮中添加登录验证 ==========
+    function checkPassword1() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('请先登录');
+            authPopup.style.display = 'flex';
+            return;
+        }
+        
+        // 记录下载（可选）
+        fetch(`${API_URL}/api/download/record`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ appName: 'Rain ClientV2' })
+        }).catch(err => console.log('记录下载失败:', err));
+        
+        // 原来的下载逻辑
+        let input = prompt("请输入安装密码","");
+        if(input === "Rain-5a9971f985"){
+            window.open("https://www.123912.com/s/m65fTd-073QA?pwd=Rain#","_blank");
+        } else {
+            alert("密码错误！");
+        }
+    }
+
+    function checkPassword2() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('请先登录');
+            authPopup.style.display = 'flex';
+            return;
+        }
+        
+        fetch(`${API_URL}/api/download/record`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ appName: 'Rain Pro Client-V7' })
+        }).catch(err => console.log('记录下载失败:', err));
+        
+        let input = prompt("请输入安装密码","");
+        if(input === "Rain-Pro-70633c3767"){
+            window.open("https://www.123912.com/s/m65fTd-b73QA?pwd=RPro#","_blank");
+        } else {
+            alert("密码错误！");
+        }
+    }
+
+    // 页面加载时检查登录状态
+    window.addEventListener('load', () => {
+        checkLoginStatus();
+        checkVipStatus();
+        
+        // 把API地址显示出来方便调试
+        console.log('API服务器地址:', API_URL);
+    });
+
+    // 点击弹窗外关闭
+    authPopup.addEventListener('click', (e) => {
+        if (e.target === authPopup) {
+            authPopup.style.display = 'none';
+        }
+    });
+
+    // ===== 主题切换 =====
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('theme-neon');
+        themeToggle.textContent = body.classList.contains('theme-neon') ? '🌈' : '✨';
+        themeToggle.style.transform = 'rotate(360deg)';
+        setTimeout(() => {
+            themeToggle.style.transform = '';
+        }, 300);
+    });
+
+    // ===== 顶部悬浮盘点击弹出窗口 =====
+    const topDiscIcon = document.getElementById('topDiscIcon');
+    const playerPopup = document.getElementById('playerPopup');
+    const popupClose = document.getElementById('popupClose');
+    
+    topDiscIcon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        playerPopup.classList.toggle('show');
+    });
+    
+    popupClose.addEventListener('click', function() {
+        playerPopup.classList.remove('show');
+    });
+    
+    // 点击其他地方关闭弹出窗
+    document.addEventListener('click', function(e) {
+        if (playerPopup.classList.contains('show') && 
+            !playerPopup.contains(e.target) && 
+            !topDiscIcon.contains(e.target)) {
+            playerPopup.classList.remove('show');
+        }
+    });
+
+    // ===== 音频播放器功能 =====
+    const playlist = [
+        { 
+            name: '下雨天', 
+            url: 'https://music.163.com/song/media/outer/url?id=2730590171.mp3',
+            cover: 'https://free.boltp.com/2026/02/28/69a2d2f82f20c.webp',
+            artist: 'Rain Music'
+        },
+        { 
+            name: '小半', 
+            url: 'https://music.163.com/song/media/outer/url?id=3339109201.mp3',
+            cover: 'https://free.boltp.com/2026/02/28/69a2d3699aa86.webp',
+            artist: 'Rain Music'
+        },
+        { 
+            name: '去北极忘记你', 
+            url: 'https://music.163.com/song/media/outer/url?id=3326118989.mp3',
+            cover: 'https://free.boltp.com/2026/02/28/69a2d36984b4e.webp',
+            artist: 'Rain Music'
+        }
+    ];
+    
+    let currentIndex = 0;
+    let isPlaying = true;
+    let loopMode = 'list';
+    let audio = new Audio();
+    audio.src = playlist[currentIndex].url;
+    audio.preload = 'auto';
+    audio.volume = 0.8;
+
+    // DOM 元素
+    const popupPlayPauseBtn = document.getElementById('popupPlayPauseBtn');
+    const popupPrevBtn = document.getElementById('popupPrevBtn');
+    const popupNextBtn = document.getElementById('popupNextBtn');
+    const popupLoopBtn = document.getElementById('popupLoopBtn');
+    const popupVolumeSlider = document.getElementById('popupVolumeSlider');
+    const popupSongTitle = document.getElementById('popupSongTitle');
+    const popupArtist = document.getElementById('popupArtist');
+    const coverImage = document.getElementById('coverImage');
+    const albumCover = document.getElementById('albumCover');
+    const popupProgressBar = document.getElementById('popupProgressBar');
+    const popupProgressContainer = document.getElementById('popupProgressContainer');
+    const currentTimeDisplay = document.getElementById('currentTimeDisplay');
+    const durationDisplay = document.getElementById('durationDisplay');
+
+    // 更新UI
+    function updateUI() {
+        const song = playlist[currentIndex];
+        popupSongTitle.textContent = song.name;
+        popupArtist.textContent = song.artist;
+        coverImage.src = song.cover;
+        
+        if (isPlaying) {
+            popupPlayPauseBtn.innerHTML = '⏸️';
+            albumCover.classList.remove('paused');
+        } else {
+            popupPlayPauseBtn.innerHTML = '▶️';
+            albumCover.classList.add('paused');
+        }
+        
+        if (loopMode === 'single') {
+            popupLoopBtn.innerHTML = '🔂 单曲循环';
+            popupLoopBtn.classList.add('active');
+        } else {
+            popupLoopBtn.innerHTML = '🔁 列表循环';
+            popupLoopBtn.classList.remove('active');
+        }
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function updateProgress() {
+        if (audio.duration) {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            popupProgressBar.style.width = percent + '%';
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            durationDisplay.textContent = formatTime(audio.duration);
+        }
+    }
+
+    popupProgressContainer.addEventListener('click', (e) => {
+        const rect = popupProgressContainer.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = pos * audio.duration;
+    });
+
+    function playCurrent() {
+        audio.src = playlist[currentIndex].url;
+        audio.play().then(() => {
+            isPlaying = true;
+            updateUI();
+        }).catch(e => {
+            console.log('播放失败', e);
+            isPlaying = false;
+            updateUI();
+        });
+    }
+
+    function togglePlay() {
+        if (isPlaying) {
+            audio.pause();
+            isPlaying = false;
+        } else {
+            audio.play().catch(() => {});
+            isPlaying = true;
+        }
+        updateUI();
+    }
+
+    function prevSong() {
+        currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        playCurrent();
+    }
+
+    function nextSong() {
+        if (loopMode === 'single') {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        } else {
+            currentIndex = (currentIndex + 1) % playlist.length;
+            playCurrent();
+        }
+    }
+
+    function toggleLoop() {
+        loopMode = loopMode === 'list' ? 'single' : 'list';
+        updateUI();
+    }
+
+    popupVolumeSlider.addEventListener('input', (e) => {
+        audio.volume = e.target.value / 100;
+    });
+
+    popupPlayPauseBtn.addEventListener('click', togglePlay);
+    popupPrevBtn.addEventListener('click', prevSong);
+    popupNextBtn.addEventListener('click', nextSong);
+    popupLoopBtn.addEventListener('click', toggleLoop);
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('loadedmetadata', () => {
+        durationDisplay.textContent = formatTime(audio.duration);
+    });
+    
+    audio.addEventListener('ended', function() {
+        if (loopMode === 'single') {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        } else {
+            nextSong();
+        }
+    });
+
+    // 页面加载自动播放
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            audio.play().then(() => {
+                isPlaying = true;
+                updateUI();
+            }).catch(() => {
+                isPlaying = false;
+                updateUI();
+                
+                const playOnClick = () => {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        updateUI();
+                    }).catch(e => console.log('播放失败', e));
+                    document.removeEventListener('click', playOnClick);
+                    document.removeEventListener('touchstart', playOnClick);
+                };
+                document.addEventListener('click', playOnClick);
+                document.addEventListener('touchstart', playOnClick);
+            });
+        }, 300);
+    });
+
+    updateUI();
+
+    // ===== 原有音效和功能 =====
+    let audioContext = null;
+    
+    function getAudioContext() {
+        if (audioContext) return audioContext;
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn('Web Audio API 不支持', e);
+        }
+        return audioContext;
+    }
+
+    function playClickSound() {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        
+        if (ctx.state === 'suspended') {
+            ctx.resume().then(() => {
+                actuallyPlay(ctx);
+            }).catch(e => console.log('恢复音频上下文失败', e));
+        } else if (ctx.state === 'running') {
+            actuallyPlay(ctx);
+        }
+    }
+
+    function actuallyPlay(ctx) {
+        try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = 1200;
+            
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start(now);
+            osc.stop(now + 0.03);
+        } catch (e) {}
+    }
+
+    document.addEventListener('click', function(e) {
+        let target = e.target;
+        while (target && target !== document) {
+            if (target.classList && target.classList.contains('click-sound')) {
+                playClickSound();
+                break;
+            }
+            target = target.parentNode;
+        }
+    }, false);
+
+    function goToVip() {
+        document.getElementById('vipSection').scrollIntoView({ behavior: 'smooth' });
+    }
+    function goToClient() {
+        document.getElementById('clientSection').scrollIntoView({ behavior: 'smooth' });
+    }
+    function goToProject() {
+        document.getElementById('projectSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function createParticles() {
+        const container = document.getElementById('particles');
+        container.innerHTML = '';
+        let num = window.innerWidth < 768 ? 15 : 30;
+        for(let i=0;i<num;i++){
+            let p = document.createElement('div');
+            p.classList.add('particle');
+            let size = Math.random()*10+2;
+            p.style.width = size+'px';
+            p.style.height = size+'px';
+            p.style.left = Math.random()*100+'vw';
+            p.style.animationDuration = (Math.random()*20+10)+'s';
+            p.style.animationDelay = Math.random()*10+'s';
+            p.style.background = Math.random()>0.5 ? 'rgba(102,126,234,0.4)' : 'rgba(255,119,198,0.4)';
+            p.style.opacity = Math.random()*0.5+0.2;
+            container.appendChild(p);
+        }
+    }
+
+    function createSnowflakes() {
+        const container = document.getElementById('snow');
+        container.innerHTML = '';
+        const snowNum = window.innerWidth < 768 ? 20 : 40;
+        const snowChars = ['❄️', '❅', '❆'];
+        for(let i=0;i<snowNum;i++){
+            let snow = document.createElement('div');
+            snow.classList.add('snowflake');
+            snow.innerText = snowChars[Math.floor(Math.random()*snowChars.length)];
+            const size = Math.random()*10+8;
+            snow.style.fontSize = size+'px';
+            snow.style.left = Math.random()*100+'vw';
+            snow.style.animationDuration = Math.random()*20+10+'s';
+            snow.style.animationDelay = Math.random()*10+'s';
+            snow.style.opacity = Math.random()*0.5+0.3;
+            container.appendChild(snow);
+        }
+    }
+
+    const root = document.getElementById('root');
+    const appContainer = document.getElementById('app-container');
+    const langEnBtn = document.getElementById('lang-en');
+    const langZhBtn = document.getElementById('lang-zh');
+    const viewDesktopBtn = document.getElementById('view-desktop');
+    const viewMobileBtn = document.getElementById('view-mobile');
+
+    langEnBtn.onclick = () => { 
+        root.classList.remove('lang-zh'); 
+        root.classList.add('lang-en'); 
+        langEnBtn.classList.add('active'); 
+        langZhBtn.classList.remove('active');
+    }
+    
+    langZhBtn.onclick = () => { 
+        root.classList.remove('lang-en'); 
+        root.classList.add('lang-zh'); 
+        langZhBtn.classList.add('active'); 
+        langEnBtn.classList.remove('active');
+    }
+    
+    viewDesktopBtn.onclick = () => { 
+        appContainer.classList.remove('mobile-mode'); 
+        viewDesktopBtn.classList.add('active'); 
+        viewMobileBtn.classList.remove('active');
+    }
+    
+    viewMobileBtn.onclick = () => { 
+        appContainer.classList.add('mobile-mode'); 
+        viewMobileBtn.classList.add('active'); 
+        viewDesktopBtn.classList.remove('active');
+    }
+
+    window.onload = () => {
+        if(window.innerWidth<768) viewMobileBtn.click();
+        createParticles();
+        createSnowflakes();
+
+        document.body.addEventListener('touchstart', function initCtx() {
+            getAudioContext();
+            document.body.removeEventListener('touchstart', initCtx);
+        }, { once: true });
+    }
+    
+    window.onresize = () => {
+        createParticles();
+        createSnowflakes();
+    }
+    </script>
+</body>
+</html>
